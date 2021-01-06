@@ -13,30 +13,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('api')->group(function () {
+
+    Route::get('/agencies', "AgencyController@index");
+    Route::get('/agencies/{agency_id}', "AgencyController@show");
+
+    Route::get('/calendar', "CalendarController@index");
+    Route::get('/calendar/{service_id}', "CalendarController@show");
+
+    Route::get('/routes', "RouteController@index");
+    Route::get('/routes/{route_id}', "RouteController@show");
+
+    Route::get('/shapes', "ShapeController@index");
+    Route::get('/shapes/{shape_id}', "ShapeController@show");
+
+    Route::get('/stops', "StopController@index");
+    Route::get('/stops/{stop_id}', "StopController@show");
+
+    Route::get('/stop_times', "StopTimeController@index");
+    Route::get('/stop_times/{trip_id}', "StopTimeController@show");
+
+    Route::get('/trips', "TripController@index");
+    Route::get('/trips/{trip_id}', "TripController@show");
+
+    Route::get('/vehicles', "VehicleController@index");
+    Route::get('/vehicles/{vehicle_id}', "VehicleController@show");
+
 });
-
-Route::get('/agencies', "AgencyController@index");
-Route::get('/agencies/{agency_id}', "AgencyController@show");
-
-Route::get('/calendar', "CalendarController@index");
-Route::get('/calendar/{service_id}', "CalendarController@show");
-
-Route::get('/routes', "RouteController@index");
-Route::get('/routes/{route_id}', "RouteController@show");
-
-Route::get('/shapes', "ShapeController@index");
-Route::get('/shapes/{shape_id}', "ShapeController@show");
-
-Route::get('/stops', "StopController@index");
-Route::get('/stops/{stop_id}', "StopController@show");
-
-Route::get('/stop_times', "StopTimeController@index");
-Route::get('/stop_times/{trip_id}', "StopTimeController@show");
-
-Route::get('/trips', "TripController@index");
-Route::get('/trips/{trip_id}', "TripController@show");
-
-Route::get('/vehicles', "VehicleController@index");
-Route::get('/vehicles/{vehicle_id}', "VehicleController@show");
