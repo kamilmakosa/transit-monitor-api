@@ -24,6 +24,8 @@ Route::prefix('api')->group(function () {
 
     Route::get('/routes', "RouteController@index");
     Route::get('/routes/{route_id}', "RouteController@show");
+    Route::get('/routes/{route_id}/trips', "TripController@indexByRoute");
+    Route::get('/routes/{route_id}/trips\?day={day}', "TripController@indexByRoute");
 
     Route::get('/shapes', "ShapeController@index");
     Route::get('/shapes/{shape_id}', "ShapeController@show");
