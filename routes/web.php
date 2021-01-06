@@ -24,9 +24,8 @@ Route::prefix('api')->group(function () {
 
     Route::get('/routes', "RouteController@index");
     Route::get('/routes/checktracks', "RouteController@checkAllTracks");
-    Route::get('/routes/{route_id}', "RouteController@show");
-    Route::get('/routes/{route_id}/trips', "TripController@indexByRoute");
     Route::get('/routes/{route_id}/trips\?day={day}', "TripController@indexByRoute");
+    Route::get('/routes/{route_id}/trips', "TripController@indexByRoute");
     Route::get('/routes/{route_id}/stops', "RouteController@showStops");
     Route::get('/routes/{route_id}/details', "RouteController@showDetails");
     Route::get('/routes/{stop_id}/headsignsByStopId', "RouteController@showHeadsignsByStopId");
@@ -35,6 +34,7 @@ Route::prefix('api')->group(function () {
     Route::get('/routes/{route_id}/extrainfos', "RouteController@showExtraInfos");
     Route::get('/routes/{route_id}/tracks', "RouteController@showTracks");
     Route::get('/routes/{route_id}/stop-plan', "RouteController@showStopPlan");
+    Route::get('/routes/{route_id}', "RouteController@show");
 
     Route::get('/shapes', "ShapeController@index");
     Route::get('/shapes/{shape_id}', "ShapeController@show");
@@ -45,8 +45,8 @@ Route::prefix('api')->group(function () {
     Route::get('/stops/code/{stop_code}', "StopController@showByCode");
 
     Route::get('/stop_times', "StopTimeController@index");
-    Route::get('/stop_times/{trip_id}', "StopTimeController@show");
     Route::get('/stop_times/route_id={route_id}&stop_id={stop_id}', "StopTimeController@indexByRouteAndStop");
+    Route::get('/stop_times/{trip_id}', "StopTimeController@show");
 
     Route::get('/trips', "TripController@index");
     Route::get('/trips/{trip_id}', "TripController@show");
