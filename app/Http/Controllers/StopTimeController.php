@@ -15,4 +15,15 @@ class StopTimeController extends Controller
     public function show($trip_id) {
         return DB::table('stop_times')->where('trip_id', 'LIKE', '%_'.$trip_id.'%')->orderBy('stop_sequence')->get();
     }
+
+    public function indexByRouteAndStop($route_id, $stop_id) {
+        return DB::table('stop_times')
+            ->join('trips', function($join) {
+                $join->on('stop_times.trip_id', '=', 'trips.trip_id');
+            })
+            ->where('route_id', '=', $route_id)
+            ->where('stop_id', '=', $stop_id)
+            ->orderBy('departure_time')
+            ->get();
+    }
 }

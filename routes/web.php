@@ -37,6 +37,7 @@ Route::prefix('api')->group(function () {
 
     Route::get('/stop_times', "StopTimeController@index");
     Route::get('/stop_times/{trip_id}', "StopTimeController@show");
+    Route::get('/stop_times/route_id={route_id}&stop_id={stop_id}', "StopTimeController@indexByRouteAndStop");
 
     Route::get('/trips', "TripController@index");
     Route::get('/trips/{trip_id}', "TripController@show");
