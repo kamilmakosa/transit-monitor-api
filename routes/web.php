@@ -20,6 +20,7 @@ Route::prefix('api')->group(function () {
 
     Route::get('/calendar', "CalendarController@index");
     Route::get('/calendar/{service_id}', "CalendarController@show");
+    Route::get('/calendar/key=day', "CalendarController@indexByDay");
 
     Route::get('/routes', "RouteController@index");
     Route::get('/routes/{route_id}', "RouteController@show");
