@@ -19,14 +19,14 @@ Route::prefix('api')->group(function () {
     Route::get('/agencies/{agency_id}', "AgencyController@show");
 
     Route::get('/calendar', "CalendarController@index");
-    Route::get('/calendar/{service_id}', "CalendarController@show");
     Route::get('/calendar/key=day', "CalendarController@indexByDay");
+    Route::get('/calendar/{service_id}', "CalendarController@show");
 
     Route::get('/routes', "RouteController@index");
+    Route::get('/routes/checktracks', "RouteController@checkAllTracks");
     Route::get('/routes/{route_id}', "RouteController@show");
     Route::get('/routes/{route_id}/trips', "TripController@indexByRoute");
     Route::get('/routes/{route_id}/trips\?day={day}', "TripController@indexByRoute");
-    Route::get('/routes/checktracks', "RouteController@checkAllTracks");
     Route::get('/routes/{route_id}/stops', "RouteController@showStops");
     Route::get('/routes/{route_id}/details', "RouteController@showDetails");
     Route::get('/routes/{stop_id}/headsignsByStopId', "RouteController@showHeadsignsByStopId");
