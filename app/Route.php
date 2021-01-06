@@ -8,4 +8,5 @@ class Route extends Model
 {
     protected $table = "routes";
     protected $primaryKey = "route_id";
+    protected $keyType = "string";
 }
