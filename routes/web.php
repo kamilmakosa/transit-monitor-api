@@ -27,6 +27,7 @@ Route::prefix('api')->group(function () {
 
     Route::get('/shapes', "ShapeController@index");
     Route::get('/shapes/{shape_id}', "ShapeController@show");
+    Route::get('/shapes/list', "ShapeController@list");
 
     Route::get('/stops', "StopController@index");
     Route::get('/stops/{stop_id}', "StopController@show");
