@@ -21,8 +21,7 @@ class TripController extends Controller
         if(!$request->day && $request->day != "0") {
             return DB::table('trips')->where('route_id', $route_id)->get();
         } else {
-            $calendar = new Calendar;
-            $service_id = $calendar->getServiceId($request->day);
+            $service_id = Calendar::getServiceId($request->day);
             $service_id = $service_id[0]->service_id;
             return DB::table('trips')->where('route_id', $route_id)->where('service_id', $service_id)->get();
         }
