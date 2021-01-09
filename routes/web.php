@@ -41,6 +41,7 @@ Route::prefix('api')->group(function () {
     Route::get('/shapes/list', "ShapeController@list");
 
     Route::get('/stops', "StopController@index");
+    Route::get('/stops/{stop_id}/departures', "StopController@generateDepartures");
     Route::get('/stops/{stop_id}', "StopController@show");
     Route::get('/stops/code/{stop_code}', "StopController@showByCode");
 
