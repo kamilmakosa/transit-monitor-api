@@ -14,7 +14,7 @@ class Departures extends Model
     public function generate($stop_id) {
         $tripUpdates = $this->getTripUpdates();
 
-        $service_id_y = Calendar::getServiceId((date('N')-2)%7)[0]->service_id;
+        $service_id_y = Calendar::getServiceId((date('N')-2+7)%7)[0]->service_id;
         $static_array_yesterday = $this->getDepartureByStop($stop_id, $service_id_y);
         $service_id = Calendar::getServiceId(date('N')-1)[0]->service_id;
         $static_array = $this->getDepartureByStop($stop_id, $service_id);
