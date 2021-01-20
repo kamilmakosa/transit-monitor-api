@@ -67,6 +67,9 @@ class GtfsUpdater extends Command
                     }
                     $file_parts = pathinfo($entry);
                     if (isset($file_parts['extension']) && $file_parts['extension'] == 'zip') {
+                        if (!is_dir('./'.$this->path)) {
+                            mkdir('./'.$this->path);
+                        }
                         rename('./'.$entry, './storage/gtfs/'.$entry);
                         break;
                     }
