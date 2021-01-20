@@ -39,19 +39,15 @@ class GtfsUpdater extends Command
      */
     public function handle()
     {
-        // $this->download();
-        $filename = '20210122_20210214';
-        // $this->extract($filename);
-        var_dump(realpath('./'.$this->path.'/'.$filename));
+        $filename = $this->download();
+        $this->extract($filename);
         $handle = opendir('./'.$this->path.'/'.$filename);
-        // var_dump($handle);
         if ($handle) {
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
                     if(!is_file('./'.$this->path.'/'.$filename.'/'.$entry)) {
                         continue;
                     }
-                    // $this->info($entry);
                     $file_parts = pathinfo($entry);
                     $this->uploadFile($file_parts['filename'], $this->path.'/'.$filename, $entry);
                     break;
@@ -72,7 +68,8 @@ class GtfsUpdater extends Command
                     }
                     $file_parts = pathinfo($entry);
                     if (isset($file_parts['extension']) && $file_parts['extension'] == 'zip') {
-                        rename($entry, 'storage/gtfs'.$entry);
+                        rename('./'.$entry, './storage/gtfs/'.$entry);
+                        break;
                     }
                 }
             }
@@ -85,7 +82,9 @@ class GtfsUpdater extends Command
         $zip = new \ZipArchive;
         $filepath = realpath('./'.$this->path.'/'.$filename.'.zip');
         if ($zip->open($filepath) === TRUE) {
-            mkdir('./'.$this->path.'/'.$filename);
+            if (!is_dir('./'.$this->path.'/'.$filename)) {
+                mkdir('./'.$this->path.'/'.$filename);
+            }
             $filepath = realpath('./'.$this->path.'/'.$filename);
 		    $zip->extractTo($filepath);
 		    $zip->close();
@@ -94,16 +93,16 @@ class GtfsUpdater extends Command
         return false;
     }
 
-    private function uploadFile($table, $path, $filename, $delimiter = ',') {
+    private function uploadFile($table, $path, $filename) {
+        $delimiter = ',';
         $enclosed = "\"";
 
-        // echo 'Processing: '.$filename.' to '.$database.'.'.$table.'<br/>';
+        $this->info('Processing: '.$filename.' to gtfs.'.$table);
         $file = fopen('./'.$path.'/'.$filename, "r") or exit("Unable to open file!");
         $filedata = trim(fgets($file));
         if($delimiter != ',') {
             $filedata = str_replace($delimiter, ',', $filedata);
         }
-        DB::table($table)->truncate();
 		$enclosed_text = ($enclosed) ? "OPTIONALLY ENCLOSED BY '$enclosed'" : '';
         $path = realpath('./'.$path);
 		$dir = str_replace('\\',"/",$path);
@@ -111,9 +110,10 @@ class GtfsUpdater extends Command
 		$subst = '';
 		$filedata = preg_replace($re, $subst, $filedata);
 		$query = "LOAD DATA LOCAL INFILE '$dir/$filename' INTO TABLE $table FIELDS TERMINATED BY '$delimiter' $enclosed_text LINES TERMINATED BY '\r\n' IGNORE 1 LINES ($filedata);";
-		var_dump($query);
-        DB::raw($query);
-		// $dbConn->query($query);
-		// echo 'Error: '.$dbConn->error.'<br/><br/>';
+
+        DB::table($table)->truncate();
+        $pdo = DB::connection()->getPdo();
+        $pdo->exec($query);
+        $this->info('Uploaded: '.$filename.' to gtfs.'.$table);
     }
 }
