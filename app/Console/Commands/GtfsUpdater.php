@@ -39,7 +39,17 @@ class GtfsUpdater extends Command
      */
     public function handle()
     {
+        DB::table('logs')->insert([
+            'log_key' => 'command_run',
+            'log_value' => 'gtfs:update'
+        ]);
+        $old = DB::table('logs')->orderBy('log_time', 'DESC')->where('log_key', 'db_upload')->limit(1)->get();
         $filename = $this->download();
+        $new = explode('_', $filename);
+        if($new[0] <= $old[0]->log_value || $new[0] > date('Ymd')) {
+            return 0;
+        }
+
         $this->extract($filename);
         $handle = opendir('./'.$this->path.'/'.$filename);
         if ($handle) {
@@ -54,6 +64,10 @@ class GtfsUpdater extends Command
             }
             closedir($handle);
         }
+        DB::table('logs')->insert([
+            'log_key' => 'db_upload',
+            'log_value' => $new[0]
+        ]);
     }
 
     private function download() {
@@ -114,8 +128,16 @@ class GtfsUpdater extends Command
 		$query = "LOAD DATA LOCAL INFILE '$dir/$filename' INTO TABLE $table FIELDS TERMINATED BY '$delimiter' $enclosed_text LINES TERMINATED BY '\r\n' IGNORE 1 LINES ($filedata);";
 
         DB::table($table)->truncate();
+        DB::table('logs')->insert([
+            'log_key' => 'table_truncate',
+            'log_value' => $table
+        ]);
         $pdo = DB::connection()->getPdo();
         $pdo->exec($query);
         $this->info('Uploaded: '.$filename.' to gtfs.'.$table);
+        DB::table('logs')->insert([
+            'log_key' => 'table_load-data',
+            'log_value' => $table
+        ]);
     }
 }
