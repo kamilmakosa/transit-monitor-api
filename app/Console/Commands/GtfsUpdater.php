@@ -50,7 +50,6 @@ class GtfsUpdater extends Command
                     }
                     $file_parts = pathinfo($entry);
                     $this->uploadFile($file_parts['filename'], $this->path.'/'.$filename, $entry);
-                    break;
                 }
             }
             closedir($handle);
