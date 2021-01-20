@@ -44,7 +44,7 @@ class GtfsUpdater extends Command
         $handle = opendir('./'.$this->path.'/'.$filename);
         if ($handle) {
             while (false !== ($entry = readdir($handle))) {
-                if ($entry != "." && $entry != "..") {
+                if ($entry != "." && $entry != ".." && $entry != "feed_info.txt") {
                     if(!is_file('./'.$this->path.'/'.$filename.'/'.$entry)) {
                         continue;
                     }
