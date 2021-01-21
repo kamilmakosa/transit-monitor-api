@@ -8,8 +8,7 @@ use App\Calendar;
 
 class Departures extends Model
 {
-    // private $tripUpdateFile = '/var/www/html/gtfs-poznan-api/trip_updates.json';
-    private $tripUpdateFile = 'http://51.178.29.39/gtfs-poznan-api/trip_updates.json';
+    private $tripUpdateFile = '/var/www/html/transit-monitor-api/storage/gtfs-rt/trip_updates.json';
 
     public function generate($stop_id) {
         $tripUpdates = $this->getTripUpdates();
