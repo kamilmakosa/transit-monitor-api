@@ -115,9 +115,16 @@ class Departures extends Model
         $columns = "trip_id, " . $trip . ", stop_sequence, arrival_time, departure_time, " . $timestamp . ",  pickup_type, drop_off_type, route_id, service_id, trip_headsign, wheelchair_accessible";
         $columns = "trip_id, " . $trip . ", stop_sequence, arrival_time, departure_time, " . $timestamp . ",  route_id, route_short_name, route_long_name, route_color, route_text_color, service_id, trip_headsign";
         $sql = "SELECT " . $columns . " FROM stop_times JOIN trips USING(trip_id) JOIN routes USING(route_id) WHERE stop_id=" . $stop_id . " AND service_id=" . $service_id;
-        $url = "php/getSQL.php?key=trip&sql=" . urlencode($sql);
-        $json_data = file_get_contents('http://51.178.29.39/poznan_public_transit/'.$url);
-        return (array) json_decode($json_data);
+
+        // $url = "php/getSQL.php?key=trip&sql=" . urlencode($sql);
+        // $json_data = file_get_contents('http://51.178.29.39/poznan_public_transit/'.$url);
+        // return (array) json_decode($json_data);
+
+        $stmt = $pdo->query($sql);
+        while ( $row = $stmt->fetch(\PDO::FETCH_OBJ) ) {
+            $result[$row->trip] = $row;
+        }
+        return $result;
     }
 
     private function filterDepartures($departuresArray) {
