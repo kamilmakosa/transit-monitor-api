@@ -53,6 +53,7 @@ Route::prefix('api')->group(function () {
     Route::get('/trips/{trip_id}', "TripController@show");
 
     Route::get('/vehicles', "VehicleController@index");
+    Route::get('/vehicles/live', "VehicleController@live");
     Route::get('/vehicles/{vehicle_id}', "VehicleController@show");
-
+    
 });

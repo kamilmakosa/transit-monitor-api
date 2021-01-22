@@ -14,4 +14,8 @@ class VehicleController extends Controller
     public function show($vehicle_id) {
         return Vehicle::find($vehicle_id);
     }
+
+    public function live() {
+        echo file_get_contents(Vehicle::vehiclePositionsFile);
+    }
 }
