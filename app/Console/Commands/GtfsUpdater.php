@@ -43,12 +43,19 @@ class GtfsUpdater extends Command
             'log_key' => 'command_run',
             'log_value' => 'gtfs:update'
         ]);
-        $old = DB::table('logs')->orderBy('log_time', 'DESC')->where('log_key', 'db_upload')->limit(1)->get();
-        $filename = $this->download();
-        $new = explode('_', $filename);
-        if($new[0] <= $old[0]->log_value || $new[0] > date('Ymd')) {
+        $list = $this->listGtfs();
+        $isUpdate = false;
+        foreach($list as $files) {
+            if($files['start'] == date('Ymd')) {
+                $isUpdate = true;
+                $file = $files['file'];
+            }
+        }
+        if(!$isUpdate) {
             return 0;
         }
+        $this->info('Download file: '.$file);
+        $filename = $this->download($file);
 
         $this->extract($filename);
         $handle = opendir('./'.$this->path.'/'.$filename);
@@ -66,12 +73,29 @@ class GtfsUpdater extends Command
         }
         DB::table('logs')->insert([
             'log_key' => 'db_upload',
-            'log_value' => $new[0]
+            'log_value' => $file
         ]);
     }
 
-    private function download() {
-        $url = "https://www.ztm.poznan.pl/pl/dla-deweloperow/getGTFSFile?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZXN0Mi56dG0ucG96bmFuLnBsIiwiY29kZSI6MSwibG9naW4iOiJtaFRvcm8iLCJ0aW1lc3RhbXAiOjE1MTM5NDQ4MTJ9.ND6_VN06FZxRfgVylJghAoKp4zZv6_yZVBu_1-yahlo";
+    private function listGtfs() {
+        $html = file_get_contents('https://www.ztm.poznan.pl/pl/dla-deweloperow/gtfsFiles');
+        $re = '/[\n\t]/m';
+        $html = preg_replace($re, '', $html);
+        $re = '/<td>([0-9]+_[0-9]+)\.zip<\/td>/U';
+        preg_match_all($re, $html, $matches, PREG_SET_ORDER, 0);
+        foreach($matches as $match) {
+            list($start, $end) = explode('_', $match[1]);
+            $list[] = array(
+                'start' => $start,
+                'end' => $end,
+                'file' => $match[1].'.zip'
+            );
+        }
+        return $list;
+    }
+
+    private function download($file) {
+        $url = "https://www.ztm.poznan.pl/pl/dla-deweloperow/getGTFSFile/?file=".$file;
         exec('curl -O -J "'.$url.'"');
         if ($handle = opendir('.')) {
             while (false !== ($entry = readdir($handle))) {
