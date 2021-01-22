@@ -110,6 +110,8 @@ class Departures extends Model
     }
 
     private function getDepartureByStop($stop_id, $service_id) {
+        $pdo = DB::connection()->getPdo();
+        
         $trip = "(CASE WHEN INSTR(trip_id, '^') > 0 THEN SUBSTRING(trip_id, INSTR(trip_id, '_')+1, INSTR(trip_id, '^')-INSTR(trip_id, '_')-1) ELSE SUBSTRING(trip_id, INSTR(trip_id, '_')+1, LENGTH(trip_id)-INSTR(trip_id, '_')) END) AS trip";
         $timestamp = "UNIX_TIMESTAMP(CONVERT(CONCAT('1970-01-01', ' ',departure_time), DATETIME)) AS departure_timestamp";
         $columns = "trip_id, " . $trip . ", stop_sequence, arrival_time, departure_time, " . $timestamp . ",  pickup_type, drop_off_type, route_id, service_id, trip_headsign, wheelchair_accessible";
