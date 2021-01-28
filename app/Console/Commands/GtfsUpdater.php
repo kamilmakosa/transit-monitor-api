@@ -13,7 +13,7 @@ class GtfsUpdater extends Command
      *
      * @var string
      */
-    protected $signature = 'gtfs:update';
+    protected $signature = 'gtfs:update {--reload}';
 
     /**
      * The console command description.
@@ -41,14 +41,16 @@ class GtfsUpdater extends Command
     {
         DB::table('logs')->insert([
             'log_key' => 'command_run',
-            'log_value' => 'gtfs:update'
+            'log_value' => 'gtfs:update',
+            'log_text' => (($this->option('reload')) ? 'reload' : '')
         ]);
         $list = $this->listGtfs();
         $isUpdate = false;
         foreach($list as $files) {
-            if($files['start'] == date('Ymd')) {
+            if($files['start'] == date('Ymd') || ($this->option('reload') && $files['start'] < date('Ymd'))) {
                 $isUpdate = true;
                 $file = $files['file'];
+                break;
             }
         }
         if(!$isUpdate) {
@@ -56,7 +58,7 @@ class GtfsUpdater extends Command
         }
         $this->info('Download file: '.$file);
         $filename = $this->download($file);
-
+exit;
         $this->extract($filename);
         $handle = opendir('./'.$this->path.'/'.$filename);
         if ($handle) {
