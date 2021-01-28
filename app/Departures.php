@@ -160,7 +160,7 @@ class Departures extends Model
             if($obj->stop_sequence == 0 && $value->arrival_delay < 0) {
                 $obj->arrival_delay = 0;
             } else {
-                $obj->arrival_delay = -$value->arrival_delay;
+                $obj->arrival_delay = $value->arrival_delay;
             }
             $update_array[$value->tripId] = $obj;
         }
