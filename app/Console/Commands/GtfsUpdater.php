@@ -58,7 +58,6 @@ class GtfsUpdater extends Command
         }
         $this->info('Download file: '.$file);
         $filename = $this->download($file);
-exit;
         $this->extract($filename);
         $handle = opendir('./'.$this->path.'/'.$filename);
         if ($handle) {
