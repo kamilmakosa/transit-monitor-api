@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Calendar;
+use App\Vehicle;
 
 class Departures extends Model
 {
@@ -58,6 +59,7 @@ class Departures extends Model
                     //$static_value->route_id == $update_value->route_id &&
                     if( $static_value->trip_id == $update_value->trip) {
                         $static_value->vehicle_id = $update_value->vehicle_id;
+                        $static_value->vehicle = Vehicle::find($static_value->vehicle_id);
                         $static_value->stop_sequence_now = $update_value->stop_sequence;
                         $static_value->arrival_delay = $update_value->arrival_delay;
 
@@ -92,6 +94,7 @@ class Departures extends Model
                 //$static_value->route_id == $update_value->route_id &&
                 if( $static_value->trip_id == $update_value->trip) {
                     $static_value->vehicle_id = $update_value->vehicle_id;
+                    $static_value->vehicle = Vehicle::find($static_value->vehicle_id);
                     $static_value->stop_sequence_now = $update_value->stop_sequence;
                     $static_value->arrival_delay = $update_value->arrival_delay;
 
